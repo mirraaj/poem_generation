@@ -1,0 +1,3 @@
+<POEM>
+prose poem is an earthen pot made of gold
+</POEM>

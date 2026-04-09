@@ -1,0 +1,6 @@
+<POEM>
+Composed poem
+Hemistich;
+All equal
+Mountain ditch.
+</POEM>

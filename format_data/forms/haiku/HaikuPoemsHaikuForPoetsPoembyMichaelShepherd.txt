@@ -1,0 +1,5 @@
+<POEM>
+A poem read.
+A reader changed.
+How?
+</POEM>
