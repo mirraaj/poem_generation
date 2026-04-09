@@ -82,6 +82,7 @@ def train():
     trainer.train()
     trainer.save_model('./finalLLMmodel')
     tokenizer.save_pretrained('./finalLLMmodel')
+    return trainer, tokenizer  
 
 def trainPEFT():
     model, tokenizer = init_models_peft()
@@ -101,5 +102,6 @@ def trainPEFT():
         )
     trainer.train()
     trainer.save_model('./finalLLMmodelLORA')
-    tokenizer.save_pretrained('./finalLLMmodelLORA')    
+    tokenizer.save_pretrained('./finalLLMmodelLORA') 
+    return trainer, tokenizer  
 
