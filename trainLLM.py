@@ -86,7 +86,7 @@ def train():
 
 def trainPEFT():
     model, tokenizer = init_models_peft()
-    tokenized_dataset = return_tokenized_data(tokenizer, 512)
+    tokenized_dataset = return_tokenized_data(tokenizer, max_len=512)
 
     training_args = TrainingArguments(
         output_dir="./poem_model_peft",
