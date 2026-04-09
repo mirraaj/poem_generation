@@ -8,8 +8,8 @@ from peft import LoraConfig, get_peft_model, TaskType
 
 from read_data import load_data
 
-def load_trainable_dataset():
-    poem_files, _ = load_data()
+def load_trainable_dataset(path='format_data/'):
+    poem_files, _ = load_data(path)
     dataset = Dataset.from_dict({"text": poem_files})
     return dataset
 
@@ -42,8 +42,8 @@ def init_models_peft(model_name = "gpt2"):
     return model, tokenizer
 
 
-def return_tokenized_data(tokenizer, max_len=128):
-    dataset = load_trainable_dataset()
+def return_tokenized_data(tokenizer, path='format_data/', max_len=128):
+    dataset = load_trainable_dataset(path)
     def tokenize_function(examples):
         tokens = tokenizer(
             examples["text"],
@@ -65,7 +65,7 @@ def get_data_collector(tokenizer):
 
 def train():
     model, tokenizer = init_models()
-    tokenized_dataset = return_tokenized_data(tokenizer, 512 )
+    tokenized_dataset = return_tokenized_data(tokenizer, max_len=512 )
 
     training_args = TrainingArguments(
         output_dir="./poem_model",
@@ -80,7 +80,7 @@ def train():
         data_collator=data_collector
         )
     trainer.train()
-    trainer.save_pretrained('./finalLLMmodel')
+    trainer.save_model('./finalLLMmodel')
     tokenizer.save_pretrained('./finalLLMmodel')
 
 def trainPEFT():
@@ -100,6 +100,6 @@ def trainPEFT():
         data_collator=data_collector
         )
     trainer.train()
-    trainer.save_pretrained('./finalLLMmodel')
-    tokenizer.save_pretrained('./finalLLMmodel')    
+    trainer.save_model('./finalLLMmodelLORA')
+    tokenizer.save_pretrained('./finalLLMmodelLORA')    
 
