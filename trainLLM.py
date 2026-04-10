@@ -105,3 +105,5 @@ def trainPEFT():
     tokenizer.save_pretrained('./finalLLMmodelLORA') 
     return trainer, tokenizer  
 
+if __name__=="__main__":
+    trainer, tokenizer = trainPEFT()
