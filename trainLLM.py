@@ -70,9 +70,10 @@ def train():
     tokenized_dataset = return_tokenized_data(tokenizer, path=file_path, max_len=512 )
 
     training_args = TrainingArguments(
-        output_dir="./poem_model",
+        output_dir="./poem_model_debug",
         num_train_epochs=1,
-        per_device_train_batch_size=4
+        per_device_train_batch_size=4,
+        save_steps=25
         )
     data_collector = get_data_collector(tokenizer)
     trainer = Trainer(
@@ -91,9 +92,10 @@ def trainPEFT():
     tokenized_dataset = return_tokenized_data(tokenizer,path=file_path, max_len=512)
 
     training_args = TrainingArguments(
-        output_dir="./poem_model_peft",
+        output_dir="./poem_model_peft_debug",
         num_train_epochs=1,
-        per_device_train_batch_size=4
+        per_device_train_batch_size=4,
+        save_steps=25
         )
     data_collector = get_data_collector(tokenizer)
     trainer = Trainer(
