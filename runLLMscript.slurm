@@ -12,7 +12,7 @@
 module load DL-CondaPy
 module cuda/10.1
 
-conda activate poem
+source /home/apps/DL/DL-CondaPy3.7/bin/activate poem
 
 echo "Running on: $(hostname)"
 nvidia-smi
