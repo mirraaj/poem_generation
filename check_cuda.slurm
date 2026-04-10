@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=test2
-#SBATCH --output=output_%j.txt
-#SBATCH --error=error_%j.txt
+#SBATCH --output=output_check_cuda.txt
+#SBATCH --error=error_check_cuda.txt
 
 #SBATCH --partition=gpu        # GPU partition
 #SBATCH --gres=gpu:1           # request 1 GPU
