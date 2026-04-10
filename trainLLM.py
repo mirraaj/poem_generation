@@ -8,6 +8,8 @@ from peft import LoraConfig, get_peft_model, TaskType
 
 from read_data import load_data
 
+file_path = "format_data/"
+
 def load_trainable_dataset(path='format_data/'):
     poem_files, _ = load_data(path)
     dataset = Dataset.from_dict({"text": poem_files})
@@ -65,12 +67,15 @@ def get_data_collector(tokenizer):
 
 def train():
     model, tokenizer = init_models()
-    tokenized_dataset = return_tokenized_data(tokenizer, max_len=512 )
+    tokenized_dataset = return_tokenized_data(tokenizer, path=file_path, max_len=512 )
 
     training_args = TrainingArguments(
         output_dir="./poem_model",
-        num_train_epochs=1,
-        per_device_train_batch_size=4
+        num_train_epochs=3,
+        per_device_train_batch_size=10,
+        save_steps=100,
+        logging_strategy="steps",
+        logging_steps=50,
         )
     data_collector = get_data_collector(tokenizer)
     trainer = Trainer(
@@ -86,12 +91,15 @@ def train():
 
 def trainPEFT():
     model, tokenizer = init_models_peft()
-    tokenized_dataset = return_tokenized_data(tokenizer, max_len=512)
+    tokenized_dataset = return_tokenized_data(tokenizer, path=file_path, max_len=512 )
 
     training_args = TrainingArguments(
         output_dir="./poem_model_peft",
-        num_train_epochs=1,
-        per_device_train_batch_size=4
+        num_train_epochs=3,
+        per_device_train_batch_size=10,
+        save_steps=100,
+        logging_strategy="steps",
+        logging_steps=50,
         )
     data_collector = get_data_collector(tokenizer)
     trainer = Trainer(
