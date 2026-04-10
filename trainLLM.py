@@ -21,13 +21,13 @@ def init_models(model_name = 'gpt2'):
     # GPT2 has no pad token
     tokenizer.pad_token = tokenizer.eos_token
 
-    model = GPT2LMHeadModel.from_pretrained(model_name, attn_implementation="eager")
+    model = GPT2LMHeadModel.from_pretrained(model_name)
     model.resize_token_embeddings(len(tokenizer))
 
     return model, tokenizer
 
 def init_models_peft(model_name = "gpt2"):
-    model = GPT2LMHeadModel.from_pretrained(model_name, attn_implementation="eager")
+    model = GPT2LMHeadModel.from_pretrained(model_name)
     lora_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         r=8,
