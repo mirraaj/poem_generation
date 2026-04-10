@@ -13,3 +13,8 @@ module load DL-CondaPy
 module load compiler/cuda/10.1
 
 conda activate poem
+
+echo "Running on: $(hostname)"
+nvidia-smi
+
+python trainLLM.py
