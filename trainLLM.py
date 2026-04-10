@@ -8,6 +8,7 @@ from peft import LoraConfig, get_peft_model, TaskType
 
 from read_data import load_data
 
+
 file_path = "format_data/"
 
 def load_trainable_dataset(path='format_data/'):
@@ -91,6 +92,7 @@ def train():
 
 def trainPEFT():
     model, tokenizer = init_models_peft()
+
     tokenized_dataset = return_tokenized_data(tokenizer, path=file_path, max_len=512 )
 
     training_args = TrainingArguments(

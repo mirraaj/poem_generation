@@ -38,8 +38,8 @@ def load_topic_data(path = 'format_data/topics/'):
             i += 1
     return topic_poem, df
 
-def create_topic_prompt_dataset():
-    topic_poem, _ = load_topic_data()
+def create_topic_prompt_dataset(path="path = 'format_data/topics/'"):
+    topic_poem, _ = load_topic_data(path)
     for topic in topic_poem.keys():
         topic_poem[topic]['prompt'] = f"Write a poem about {str(topic)}:"
     return topic_poem
