@@ -116,4 +116,10 @@ def trainPEFT():
     return trainer, tokenizer  
 
 if __name__=="__main__":
+
+    print('-'*100)
+    print('-'*100){}
+    print("CUDA available:", torch.cuda.is_available())
+    if torch.cuda.is_available():
+        print("GPU:", torch.cuda.get_device_name(0))
     trainer, tokenizer = trainPEFT()
