@@ -11,8 +11,9 @@
 
 module load DL-CondaPy
 module load cuda/11.6
+module load cmake/3.21.7
 
-source /home/apps/DL/DL-CondaPy3.7/bin/activate poem
+source /home/apps/DL/DL-CondaPy3.7/bin/activate gpuenv
 
 echo "Running on: $(hostname)"
 nvidia-smi
