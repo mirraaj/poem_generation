@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task=4
 
 module load DL-CondaPy
-module load compiler/cuda/10.1
+module cuda/10.1
 
 conda activate poem
 
