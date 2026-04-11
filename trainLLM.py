@@ -23,6 +23,7 @@ def init_models(model_name = 'gpt2'):
 
     model = GPT2LMHeadModel.from_pretrained(model_name)
     model.resize_token_embeddings(len(tokenizer))
+    model.print_trainable_parameters()
 
     return model, tokenizer
 
