@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=test1
 #SBATCH --output=output_llm_full_mdoel.txt
-#SBATCH --error=error__llm_full_mdoel.txt
+#SBATCH --error=error_llm_full_mdoel.txt
 
 #SBATCH --partition=gpu        # GPU partition
 #SBATCH --gres=gpu:1           # request 1 GPU

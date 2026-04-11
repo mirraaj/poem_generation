@@ -23,8 +23,7 @@ def init_models(model_name = 'gpt2'):
 
     model = GPT2LMHeadModel.from_pretrained(model_name)
     model.resize_token_embeddings(len(tokenizer))
-    model.print_trainable_parameters()
-
+    print_trainable_parameters(model)
     return model, tokenizer
 
 def init_models_peft(model_name = "gpt2"):
@@ -66,6 +65,20 @@ def get_data_collector(tokenizer):
         mlm=False
         )
     return data_collator
+
+def print_trainable_parameters(model):
+    trainable = 0
+    total = 0
+
+    for _, param in model.named_parameters():
+        total += param.numel()
+        if param.requires_grad:
+            trainable += param.numel()
+
+    print(f"Trainable params: {trainable}")
+    print(f"Total params: {total}")
+    print(f"Trainable%: {100 * trainable / total:.2f}%")
+
 
 def train():
     model, tokenizer = init_models()
