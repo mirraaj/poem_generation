@@ -71,7 +71,7 @@ def train():
     tokenized_dataset = return_tokenized_data(tokenizer, path=file_path, max_len=512 )
 
     training_args = TrainingArguments(
-        output_dir="./poem_model_all_data",
+        output_dir="./poem_full_model_all_data",
         num_train_epochs=3,
         per_device_train_batch_size=10,
         save_steps=100,
@@ -86,8 +86,8 @@ def train():
         data_collator=data_collector
         )
     trainer.train()
-    trainer.save_model('./finalLLMmodel')
-    tokenizer.save_pretrained('./finalLLMmodel')
+    trainer.save_model('./llmModel')
+    tokenizer.save_pretrained('./llmModel')
     return trainer, tokenizer  
 
 def trainPEFT():
@@ -122,4 +122,4 @@ if __name__=="__main__":
     print("CUDA available:", torch.cuda.is_available())
     if torch.cuda.is_available():
         print("GPU:", torch.cuda.get_device_name(0))
-    trainer, tokenizer = trainPEFT()
+    trainer, tokenizer = train()
