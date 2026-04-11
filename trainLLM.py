@@ -88,7 +88,7 @@ def train():
         output_dir="./poem_full_model_all_data",
         num_train_epochs=3,
         per_device_train_batch_size=10,
-        save_steps=100,
+        save_steps=200,
         logging_strategy="steps",
         logging_steps=50,
         )
