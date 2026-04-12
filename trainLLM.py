@@ -125,8 +125,8 @@ def trainPEFT():
         data_collator=data_collector
         )
     trainer.train()
-    trainer.save_model('./llmLoraModel')
-    tokenizer.save_pretrained('./llmLoraModel') 
+    trainer.save_model('./llmLoraModel2')
+    tokenizer.save_pretrained('./llmLoraModel2') 
     return trainer, tokenizer  
 
 if __name__=="__main__":
@@ -136,4 +136,4 @@ if __name__=="__main__":
     print("CUDA available:", torch.cuda.is_available())
     if torch.cuda.is_available():
         print("GPU:", torch.cuda.get_device_name(0))
-    trainer, tokenizer = train()
+    trainer, trainPEFT = trainPEFT()
