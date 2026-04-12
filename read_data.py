@@ -43,3 +43,32 @@ def create_topic_prompt_dataset(path="path = 'format_data/topics/'"):
     for topic in topic_poem.keys():
         topic_poem[topic]['prompt'] = f"Write a poem about {str(topic)}:"
     return topic_poem
+
+def load_data_for_rl(path = 'format_data/topics/'):
+    
+    topics = [name for name in os.listdir(path) if os.path.isdir(path+name)]
+    topic_poem = {}
+
+    for t in topics:
+        topic_poem[t] = {}
+        parray = []
+        for file in os.listdir(path+t):
+            if file.endswith(".txt"):
+                fpath = path+t+'/'+file
+                f = open(fpath).read()
+                parray.append(f)
+        topic_poem[t]['poems'] = parray
+        topic_poem[t]['prompt'] = f"Write a poem about {str(t)}:"
+    
+    return topic_poem
+
+def load_query_to_poems_dataset(path = 'format_data/topics/'):
+    topic_poem = load_data_for_rl(path)
+    prompt_poem = {}
+    for t in topic_poem.keys():
+        prompt = topic_poem[t]['prompt']
+        poem_list = topic_poem[t]['poems']
+        prompt_poem[prompt] = poem_list
+    
+    return prompt_poem
+
