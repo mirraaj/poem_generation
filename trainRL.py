@@ -11,8 +11,8 @@ from read_data import load_data_for_rl, load_query_to_poems_dataset
 
 base_model_name = "gpt2"
 adapter_path = "./llmLoraModel"
-# device = "cuda"
-device = "mps"
+device = "cuda"
+# device = "mps"
 # device = "cpu"
 
 def generate_from_peft_llm_model(model, tokenizer):
