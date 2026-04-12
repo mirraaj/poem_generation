@@ -8,6 +8,7 @@ from datasets import load_dataset, Dataset
 import torch
 import pandas as pd
 from read_data import load_data_for_rl, load_query_to_poems_dataset
+import json
 
 base_model_name = "gpt2"
 adapter_path = "./llmLoraModel"
@@ -179,8 +180,11 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
     # Save model
     # =========================
     # ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
-    df = pd.DataFrame(all_stats)
-    df.to_csv("ppo_peft_stats.csv", index=False)
+
+    with open("ppo_peft_stats.json", "w") as f:
+        json.dump(all_stats, f, indent=2)
+    # df = pd.DataFrame(all_stats)
+    # df.to_csv("ppo_peft_stats.csv", index=False)
 
     return ppo_trainer, tokenizer
 
