@@ -199,8 +199,8 @@ if __name__=="__main__":
     ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
 
     # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
-    tokenizer.save_pretrained("./ppo_finetuned_model_peft_tokenizer")
-    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
+    tokenizer.save_pretrained("./ppo_finetuned_model_peft")
+    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft", create_model_card=False)
 
 def trainRLmodel():
     model, tokenizer = load_peft_model()
@@ -213,5 +213,5 @@ def trainRLmodel():
     ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
 
     # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
-    tokenizer.save_pretrained("./ppo_finetuned_model_peft_tokenizer")
-    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
+    tokenizer.save_pretrained("./ppo_finetuned_model_peft")
+    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft", create_model_card=False)
