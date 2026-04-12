@@ -203,8 +203,18 @@ if __name__=="__main__":
     ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
 
     # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
-    tokenizer.save_pretrained("./ppo_finetuned_model_peft")
-    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft", create_model_card=False)
+    tokenizer.save_pretrained("./ppo_trainer_finetuned_model_peft")
+    ppo_trainer.save_pretrained("./ppo_trainer_finetuned_model_peft", create_model_card=False)
+
+    model = ppo_trainer.accelerator.unwrap_model(ppo_trainer.model)
+    model.save_pretrained("./ppo_model_finetuned_model_peft")
+
+    # Save tokenizer
+    tokenizer.save_pretrained("./ppo_model_finetuned_model_peft")
+
+    # Save training state
+    torch.save(ppo_trainer.optimizer.state_dict(), "./ppo_model_finetuned_model_peft/optimizer.pt")
+    torch.save(ppo_trainer.lr_scheduler.state_dict(), "./ppo_model_finetuned_model_peft/scheduler.pt")
 
 def trainRLmodel():
     model, tokenizer = load_peft_model()
