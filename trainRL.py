@@ -181,8 +181,8 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
     # =========================
     # ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
 
-    with open("ppo_peft_stats.json", "w") as f:
-        json.dump(all_stats, f, indent=2)
+    with open("ppo_peft_stats.json", "w") as file:
+        json.dump(all_stats, file, indent=2)
     # df = pd.DataFrame(all_stats)
     # df.to_csv("ppo_peft_stats.csv", index=False)
 
