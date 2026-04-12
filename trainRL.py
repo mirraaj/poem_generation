@@ -1,8 +1,9 @@
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
-from sentence_transformers import SentenceTransformer, util
 from trl import PPOTrainer, PPOConfig, AutoModelForCausalLMWithValueHead
+from transformers import AutoModel, AutoTokenizer
+import torch.nn.functional as F
 from datasets import load_dataset, Dataset
 import torch
 import pandas as pd
@@ -37,17 +38,22 @@ def load_peft_model():
     return model, tokenizer
 
 
-def reward_function(generated_poem,reference_poems, semantic_model = SentenceTransformer("all-MiniLM-L6-v2")):
+def reward_function(generated_poem,reference_poems, semantic_model, semantic_tokenizer):
 
     # reference_poems = topic_poem[topic]['poems']
 
-    gen_emb = semantic_model.encode(generated_poem, convert_to_tensor=True)
+    def embed(text):
+        inputs = semantic_tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+        outputs = semantic_model(**inputs)
+        return outputs.last_hidden_state.mean(dim=1)
 
     scores = []
 
+    gen_emb = embed(generated_poem)
+
     for ref in reference_poems:
-        ref_emb = semantic_model.encode(ref, convert_to_tensor=True)
-        sim = util.cos_sim(gen_emb, ref_emb)
+        ref_emb = embed(ref)
+        sim = F.cosine_similarity(gen_emb, ref_emb)
         scores.append(sim.item())
 
     reward = max(scores)
@@ -73,7 +79,7 @@ def generate_prompt_to_train(topic_poem, policy_model, tokenizer):
 
     return topic_poem
 
-def train_PPO_model(prompt_poem, topic_poem, semantic_model, model, tokenizer, model_path = './llmLoraModel'):
+def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel'):
     # tokenizer = AutoTokenizer.from_pretrained(model_path)
     # tokenizer.pad_token = tokenizer.eos_token
 
@@ -149,7 +155,7 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, model, tokenizer, m
             # Compute rewards
             rewards = []
             for res, p in zip(responses, poems):
-                reward = reward_function(res, p, semantic_model)
+                reward = reward_function(res, p, semantic_model, semantic_tokenizer)
                 rewards.append(reward)
 
             # Convert to tensors
@@ -185,9 +191,12 @@ if __name__=="__main__":
 
     model, tokenizer = load_peft_model()
     topic_poem = load_data_for_rl(path = 'format_data/topics/')
-    semantic_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    semantic_model = AutoModel.from_pretrained("bert-base-uncased")
+    semantic_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+
     prompt_poem = load_query_to_poems_dataset(path = 'format_data/topics/')
-    ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, model, tokenizer, model_path = './llmLoraModel')
+    ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
 
     # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
     tokenizer.save_pretrained("./ppo_finetuned_model_peft_tokenizer")
@@ -196,6 +205,13 @@ if __name__=="__main__":
 def trainRLmodel():
     model, tokenizer = load_peft_model()
     topic_poem = load_data_for_rl(path = 'format_data/topics/')
-    semantic_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    semantic_model = AutoModel.from_pretrained("bert-base-uncased")
+    semantic_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+
     prompt_poem = load_query_to_poems_dataset(path = 'format_data/topics/')
-    ppo_trainer = train_PPO_model(prompt_poem, topic_poem, semantic_model, model, tokenizer, model_path = './llmLoraModel')
+    ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
+
+    # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
+    tokenizer.save_pretrained("./ppo_finetuned_model_peft_tokenizer")
+    ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
