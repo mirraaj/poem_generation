@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test1
+#SBATCH --job-name=ppopeft
 #SBATCH --output=output_ppo_peft_modell.txt
 #SBATCH --error=error_ppo_peft_model.txt
 

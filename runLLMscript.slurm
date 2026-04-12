@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test1
+#SBATCH --job-name=llmpeft
 #SBATCH --output=output_llm_peft.txt
 #SBATCH --error=error_llm_peft.txt
 
