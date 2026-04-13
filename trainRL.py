@@ -79,6 +79,18 @@ def generate_prompt_to_train(topic_poem, policy_model, tokenizer):
 
     return topic_poem
 
+def make_serializable(obj):
+    if isinstance(obj, torch.Tensor):
+        return obj.detach().cpu().item() if obj.numel() == 1 else obj.detach().cpu().tolist()
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {k: make_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [make_serializable(v) for v in obj]
+    else:
+        return obj
+
 def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel'):
     # tokenizer = AutoTokenizer.from_pretrained(model_path)
     # tokenizer.pad_token = tokenizer.eos_token
@@ -172,7 +184,6 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
             clean_stats = {k: float(v) if torch.is_tensor(v) else v for k, v in stats.items()}
             clean_stats["epoch"] = epoch
             clean_stats["step"] = i
-            clean_stats = {k: float(v) if torch.is_tensor(v) else v for k, v in stats.items()}
 
             all_stats.append(clean_stats)
             if i == 2:
@@ -183,9 +194,9 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
     # Save model
     # =========================
     # ppo_trainer.save_pretrained("./ppo_finetuned_model_peft")
-
+    serializable_stats = make_serializable(all_stats)
     with open("ppo_peft_stats.json", "w") as file:
-        json.dump(all_stats, file, indent=2)
+        json.dump(serializable_stats, file, indent=2)
     # df = pd.DataFrame(all_stats)
     # df.to_csv("ppo_peft_stats.csv", index=False)
 
