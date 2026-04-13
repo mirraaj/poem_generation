@@ -6,7 +6,6 @@ from transformers import AutoModel, AutoTokenizer
 import torch.nn.functional as F
 from datasets import load_dataset, Dataset
 import torch
-import pandas as pd
 from read_data import load_data_for_rl, load_query_to_poems_dataset
 import json
 
