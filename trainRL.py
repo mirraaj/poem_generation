@@ -8,6 +8,7 @@ from datasets import load_dataset, Dataset
 import torch
 from read_data import load_data_for_rl, load_query_to_poems_dataset
 import json
+import numpy as np
 
 base_model_name = "gpt2"
 adapter_path = "./llmLoraModel"
