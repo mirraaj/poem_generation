@@ -172,8 +172,12 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
             clean_stats = {k: float(v) if torch.is_tensor(v) else v for k, v in stats.items()}
             clean_stats["epoch"] = epoch
             clean_stats["step"] = i
+            clean_stats = {k: float(v) if torch.is_tensor(v) else v for k, v in stats.items()}
 
             all_stats.append(clean_stats)
+            if i == 2:
+                break
+        break
 
     # =========================
     # Save model
