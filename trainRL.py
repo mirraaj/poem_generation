@@ -218,8 +218,8 @@ if __name__=="__main__":
     ppo_trainer, tokenizer = train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer, model, tokenizer, model_path = './llmLoraModel')
 
     # ppo_trainer.model.pretrained_model.save_pretrained("./ppo_base_model")
-    tokenizer.save_pretrained("./ppo_trainer_finetuned_model_peft")
-    ppo_trainer.save_pretrained("./ppo_trainer_finetuned_model_peft", create_model_card=False)
+    # tokenizer.save_pretrained("./ppo_trainer_finetuned_model_peft")
+    # ppo_trainer.save_pretrained("./ppo_trainer_finetuned_model_peft", create_model_card=False)
 
     model = ppo_trainer.accelerator.unwrap_model(ppo_trainer.model)
     model.save_pretrained("./ppo_model_finetuned_model_peft")
