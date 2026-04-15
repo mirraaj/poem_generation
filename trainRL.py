@@ -234,7 +234,8 @@ if __name__=="__main__":
     # Save training state
 
     torch.save(ppo_trainer.optimizer.state_dict(), save_path + "/optimizer.pt")
-    torch.save(ppo_trainer.lr_scheduler.state_dict(), save_path + "/scheduler.pt")
+    if ppo_trainer.lr_scheduler is not None:
+        torch.save(ppo_trainer.lr_scheduler.state_dict(), save_path + "/scheduler.pt")
 
 def trainRLmodel():
     model, tokenizer = load_peft_model()
