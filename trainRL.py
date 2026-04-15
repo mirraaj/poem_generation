@@ -9,6 +9,7 @@ import torch
 from read_data import load_data_for_rl, load_query_to_poems_dataset
 import json
 import numpy as np
+import os
 
 base_model_name = "gpt2"
 adapter_path = "./llmLoraModel"
@@ -221,15 +222,19 @@ if __name__=="__main__":
     # tokenizer.save_pretrained("./ppo_trainer_finetuned_model_peft")
     # ppo_trainer.save_pretrained("./ppo_trainer_finetuned_model_peft", create_model_card=False)
 
+    save_path = "./ppo_model_finetuned_model_peft"
+    os.makedirs(save_path, exist_ok=True)
+
     model = ppo_trainer.accelerator.unwrap_model(ppo_trainer.model)
-    model.save_pretrained("./ppo_model_finetuned_model_peft")
+    model.save_pretrained(save_path)
 
     # Save tokenizer
-    tokenizer.save_pretrained("./ppo_model_finetuned_model_peft")
+    tokenizer.save_pretrained(save_path)
 
     # Save training state
-    torch.save(ppo_trainer.optimizer.state_dict(), "./ppo_model_finetuned_model_peft/optimizer.pt")
-    torch.save(ppo_trainer.lr_scheduler.state_dict(), "./ppo_model_finetuned_model_peft/scheduler.pt")
+
+    torch.save(ppo_trainer.optimizer.state_dict(), save_path + "/optimizer.pt")
+    torch.save(ppo_trainer.lr_scheduler.state_dict(), save_path + "/scheduler.pt")
 
 def trainRLmodel():
     model, tokenizer = load_peft_model()
