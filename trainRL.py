@@ -188,9 +188,6 @@ def train_PPO_model(prompt_poem, topic_poem, semantic_model, semantic_tokenizer,
             clean_stats["step"] = i
 
             all_stats.append(clean_stats)
-            if i == 2:
-                break
-        break
 
     # =========================
     # Save model
