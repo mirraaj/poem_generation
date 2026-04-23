@@ -22,4 +22,4 @@ export LD_LIBRARY_PATH=$CONDA_PREFIX/lib
 echo "Running on: $(hostname)"
 nvidia-smi
 
-python generate_poems_ppo.py 
+python generate_poems_ppo.py --prompt "Write a poem on birds"

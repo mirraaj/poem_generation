@@ -1,6 +1,19 @@
 import torch
 from transformers import AutoTokenizer
 from trl import AutoModelForCausalLMWithValueHead
+import argparse
+
+parser = argparse.ArgumentParser(description="Take a sentence as input")
+
+parser.add_argument(
+    "--prompt",
+    type=str,
+    default="The sun is shining",
+    help="Input sentence"
+)
+
+args = parser.parse_args()
+PROMPT = args.prompt
 
 # Path where your trained model is saved
 MODEL_PATH = "./ppo_model_finetuned_model_peft"
@@ -48,7 +61,7 @@ if __name__ == "__main__":
     model, tokenizer = load_model(MODEL_PATH)
 
     # Input prompt
-    prompt = "The sun is shining"
+    prompt = PROMPT
 
     # Generate poem
     poem = generate_poem(model, tokenizer, prompt)
