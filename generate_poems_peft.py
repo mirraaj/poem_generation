@@ -1,13 +1,25 @@
 import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from peft import PeftModel
+import argparse
+
+parser = argparse.ArgumentParser(description="Take a sentence as input")
+
+parser.add_argument(
+    "--prompt",
+    type=str,
+    default="The sun is shining",
+    help="Input sentence"
+)
+
+args = parser.parse_args()
 
 # -------- CONFIG --------
 MODEL_PATH_FULL = "./llmModel"        # for full fine-tuned model
 MODEL_PATH_LORA = "./llmLoraModel2"   # for PEFT model
 USE_LORA = True                      # set False if using full model
 
-PROMPT = "The sun is shining"
+PROMPT = args.prompt
 MAX_LENGTH = 100
 
 

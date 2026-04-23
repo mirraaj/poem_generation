@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=generatePpoPoem
-#SBATCH --output=output__generate_ppo_poem.txt
+#SBATCH --output=output_generate_ppo_poem.txt
 #SBATCH --error=error_generate_ppo_poem.txt
 
 #SBATCH --partition=gpu        # GPU partition
