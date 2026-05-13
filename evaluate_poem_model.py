@@ -162,21 +162,55 @@ def load_generation_model(model_path: str, device: str):
     """
     Loads a saved Hugging Face causal language model.
 
-    This should work for:
-    - PPO saved model
-    - LoRA saved model if it is saved as a normal HF model
-    - GPT-2 style causal LM folders
+    Works for:
+    - Plain HF causal LM folders
+    - LoRA/PEFT adapter folders (detected via adapter_config.json)
+    - PPO-saved models (with or without an adapter)
+
+    Manually wires up the PEFT adapter so this is compatible with peft==0.4.0
+    (transformers' auto-adapter loading needs peft >= 0.5.0).
     """
 
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model path does not exist: {model_path}")
 
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    adapter_config_path = os.path.join(model_path, "adapter_config.json")
+    is_peft_adapter = os.path.exists(adapter_config_path)
 
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
+    if is_peft_adapter:
+        # Read the adapter config to find the base model.
+        with open(adapter_config_path, "r") as f:
+            adapter_cfg = json.load(f)
 
-    model = AutoModelForCausalLM.from_pretrained(model_path)
+        base_model_name = adapter_cfg.get("base_model_name_or_path")
+        if not base_model_name:
+            raise ValueError(
+                f"adapter_config.json in {model_path} is missing "
+                f"'base_model_name_or_path'."
+            )
+
+        # Tokenizer: prefer the adapter folder (it may have added tokens),
+        # otherwise fall back to the base model.
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(model_path)
+        except Exception:
+            tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+
+        # Load the base model, then attach the LoRA adapter via PEFT directly.
+        from peft import PeftModel  # local import so the script still runs
+                                    # for non-PEFT models without peft installed
+        base_model = AutoModelForCausalLM.from_pretrained(base_model_name)
+        model = PeftModel.from_pretrained(base_model, model_path)
+
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        model = AutoModelForCausalLM.from_pretrained(model_path)
+
     model.to(device)
     model.eval()
 
