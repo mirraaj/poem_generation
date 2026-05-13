@@ -1204,13 +1204,23 @@ def main():
 
     print(f"Number of topics found: {len(topic_poem)}")
 
-    reference_df = flatten_reference_poems(topic_poem)
-
     reference_path = os.path.join(output_dir, "reference_poems.csv")
-    reference_df.to_csv(reference_path, index=False)
+
+    if os.path.exists(reference_path):
+        print(f"\nFound existing reference file: {reference_path}")
+        print("Loading reference poems from existing CSV...")
+        reference_df = pd.read_csv(reference_path)
+    else:
+        print("\nreference_poems.csv not found.")
+        print("Creating reference_poems.csv from dataset...")
+
+        reference_df = flatten_reference_poems(topic_poem)
+
+        reference_df.to_csv(reference_path, index=False)
+
+        print(f"Saved reference poems to: {reference_path}")
 
     print(f"Number of reference poems: {len(reference_df)}")
-    print(f"Saved reference poems to: {reference_path}")
 
     print("\nLoading generation model...")
     model, tokenizer = load_generation_model(args.model_path, device)
@@ -1221,7 +1231,19 @@ def main():
         args.semantic_model_name
     )
 
-    print("\nGenerating poems...")
+    raw_generation_path = os.path.join(
+        output_dir,
+        "generated_poems_raw.csv"
+    )
+
+    if os.path.exists(raw_generation_path):
+        print(f"\nFound existing generated poems file: {raw_generation_path}")
+        print("Loading generated poems from existing CSV...")
+        generated_df = pd.read_csv(raw_generation_path)
+    else:
+        print("\ngenerated_poems_raw.csv not found.")
+        print("Generating poems...")
+
     generated_df = generate_poems(
         model=model,
         tokenizer=tokenizer,
@@ -1232,11 +1254,6 @@ def main():
         top_k=args.top_k,
         top_p=args.top_p,
         num_samples_per_topic=args.num_samples_per_topic,
-    )
-
-    raw_generation_path = os.path.join(
-        output_dir,
-        "generated_poems_raw.csv"
     )
 
     generated_df.to_csv(raw_generation_path, index=False)
